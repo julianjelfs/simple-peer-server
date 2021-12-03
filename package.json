@@ -4,7 +4,7 @@
   "description": "Supports signalling when using simple-peer webrtc library",
   "main": "index.ts",
   "scripts": {
-    "start": "deno run --watch --allow-env --allow-net ./index.ts"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
