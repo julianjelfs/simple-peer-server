@@ -45,13 +45,19 @@ function init(expressServer) {
     connection.on("message", (message) => {
       const msg = JSON.parse(message);
       if (msg.kind === "signal") {
-        console.log("signal message received: ", msg);
+        console.log(
+          "signal message received: from: ",
+          msg.src,
+          ", to: ",
+          msg.dst
+        );
         const target = sockets[msg.dst];
         if (target !== undefined) {
           target.send(JSON.stringify(msg));
         } else {
           console.log(
-            "the target of the signal message is not connected to the server"
+            "the target of the signal message is not connected to the server",
+            Object.keys(sockets)
           );
         }
       }
