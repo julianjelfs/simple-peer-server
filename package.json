@@ -1,0 +1,11 @@
+{
+  "name": "simple-peer-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "start": "deno run --watch --allow-env --allow-net ./index.ts"
+  },
+  "author": "",
+  "license": "ISC"
+}
