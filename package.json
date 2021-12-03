@@ -1,11 +1,24 @@
 {
   "name": "simple-peer-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Supports signalling when using simple-peer webrtc library",
   "main": "index.ts",
   "scripts": {
     "start": "deno run --watch --allow-env --allow-net ./index.ts"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/julianjelfs/simple-peer-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/julianjelfs/simple-peer-server/issues"
+  },
+  "homepage": "https://github.com/julianjelfs/simple-peer-server#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "query-string": "^7.0.1",
+    "ws": "^8.3.0"
+  }
 }
