@@ -8,6 +8,7 @@ const server = app.listen(port, () => {
   if (process.send) {
     process.send(`Server running at http://localhost:${port}\n\n`);
   }
+  console.log(`Server running at http://localhost:${port}\n\n`);
 });
 
 websockets.init(server);
