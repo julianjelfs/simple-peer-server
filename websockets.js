@@ -44,14 +44,14 @@ function init(expressServer) {
 
     connection.on("message", (message) => {
       const msg = JSON.parse(message);
-      if (msg.kind === "signal") {
+      if (msg.content.kind === "signal") {
         console.log(
           "signal message received: from: ",
-          msg.src,
+          msg.content.sender,
           ", to: ",
-          msg.dst
+          msg.content.receiver
         );
-        const target = sockets[msg.dst];
+        const target = sockets[msg.content.receiver];
         if (target !== undefined) {
           target.send(JSON.stringify(msg));
         } else {
