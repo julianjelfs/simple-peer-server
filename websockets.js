@@ -2,24 +2,29 @@ const WebSocket = require("ws");
 const queryString = require("query-string");
 
 const sockets = {};
-
-function broadcastPeers() {
-  const peers = Object.keys(sockets);
-  Object.values(sockets).forEach((socket) => {
-    if (!socket.isClosed)
-      socket.send(
-        JSON.stringify({
-          kind: "connected-peers",
-          peers: [...peers],
-        })
-      );
-  });
-}
+const queuedMessages = {};
 
 function broadcastMessage(message, peerName) {
   Object.entries(sockets).forEach(([id, socket]) => {
     if (!socket.isClosed && peerName !== id) socket.send(message);
   });
+}
+
+function enqueMessage(remotePeer, message) {
+  if (queuedMessages[remotePeer] === undefined) {
+    queuedMessages[remotePeer] = [];
+  }
+  queuedMessages[remotePeer].push(message);
+}
+
+function flushQueuedMessages(peer, socket) {
+  if (queuedMessages[peer]) {
+    queuedMessages[peer].forEach((msg) => {
+      console.log("flushing a message for peer: ", peer);
+      socket.send(JSON.stringify(msg));
+    });
+    delete queuedMessages[peer];
+  }
 }
 
 function init(expressServer) {
@@ -40,7 +45,7 @@ function init(expressServer) {
     const peerName = connectionParams.id;
     console.log("Peer connected: ", connectionParams.id);
     sockets[peerName] = connection;
-    broadcastPeers();
+    flushQueuedMessages(peerName, connection);
 
     connection.on("message", (message) => {
       const msg = JSON.parse(message);
@@ -55,8 +60,10 @@ function init(expressServer) {
         if (target !== undefined) {
           target.send(JSON.stringify(msg));
         } else {
+          enqueMessage(msg.content.receiver, msg);
           console.log(
-            "the target of the signal message is not connected to the server",
+            msg.content.receiver,
+            " is not connected to the server, enqueueing message",
             Object.keys(sockets)
           );
         }
@@ -68,7 +75,6 @@ function init(expressServer) {
     connection.on("close", () => {
       console.log("Peer disconnected: ", peerName);
       delete sockets[peerName];
-      broadcastPeers();
       broadcastMessage(
         JSON.stringify({
           kind: "lost-connection",
