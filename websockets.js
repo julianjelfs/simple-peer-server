@@ -44,7 +44,7 @@ function init(expressServer) {
 
     connection.on("message", (message) => {
       const msg = JSON.parse(message);
-      if (msg.content.kind === "signal") {
+      if (msg.kind === "signal") {
         console.log(
           "signal message received: from: ",
           msg.content.sender,
@@ -60,6 +60,8 @@ function init(expressServer) {
             Object.keys(sockets)
           );
         }
+      } else {
+        console.log("didn't recognise message: ", message);
       }
     });
 
