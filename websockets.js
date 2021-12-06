@@ -67,7 +67,7 @@ function init(expressServer) {
             Object.keys(sockets)
           );
         }
-      } else {
+      } else if (msg.type !== "ping") {
         console.log("didn't recognise message: ", message);
       }
     });
