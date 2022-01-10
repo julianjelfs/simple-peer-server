@@ -49,12 +49,14 @@ function init(expressServer) {
 
     connection.on("message", (message) => {
       const msg = JSON.parse(message);
-      if (msg.kind === "signal") {
+      if (msg.kind === "audio-signal" || msg.kind === "video-signal") {
         console.log(
           "signal message received: from: ",
           msg.content.sender,
           ", to: ",
-          msg.content.receiver
+          msg.content.receiver,
+          ", kind: ",
+          msg.kind
         );
         const target = sockets[msg.content.receiver];
         if (target !== undefined) {
